@@ -82,10 +82,59 @@ If you prefer to install from the source repository:
 
 ## Running the Server
 
-You can run the server in two ways:
+Preferred transport is Streamable HTTP. Use one of the following:
 
-### Option 1: Using the CLI Script
-The project defines a CLI script `x-twitter-mcp-server`.
+### Recommended: Streamable HTTP (Docker/Smithery)
+Run the server as an HTTP service with Streamable HTTP and SSE endpoints.
+
+1. Build the Docker image:
+   ```bash
+   docker build -t x-twitter-mcp .
+   ```
+
+2. Run the container (Smithery uses PORT; default here is 8081):
+   ```bash
+   docker run -p 8081:8081 -e PORT=8081 x-twitter-mcp
+   ```
+
+3. Endpoints:
+   - Streamable HTTP (JSON-RPC over HTTP): `POST http://localhost:8081/mcp`
+   - SSE (Server-Sent Events): `GET http://localhost:8081/sse`
+
+4. Pass config per-request (recommended in Smithery) via base64-encoded `config` query parameter. Example config JSON:
+   ```json
+   {"twitterApiKey":"...","twitterApiSecret":"...","twitterAccessToken":"...","twitterAccessTokenSecret":"...","twitterBearerToken":"..."}
+   ```
+   Encode and call `initialize`:
+   ```bash
+   CONFIG_B64=$(printf '%s' '{"twitterApiKey":"YOUR_KEY","twitterApiSecret":"YOUR_SECRET","twitterAccessToken":"YOUR_TOKEN","twitterAccessTokenSecret":"YOUR_TOKEN_SECRET","twitterBearerToken":"YOUR_BEARER"}' | base64)
+
+   curl -sS -X POST "http://localhost:8081/mcp?config=${CONFIG_B64}" \
+     -H 'content-type: application/json' \
+     -d '{"jsonrpc":"2.0","id":"1","method":"initialize","params":{"capabilities":{}}}'
+   ```
+
+Notes:
+- A `POST /` will return 404; use `/mcp` for Streamable HTTP and `/sse` for SSE.
+- When deployed via Smithery, `smithery.yaml` is configured for `runtime: container` and `startCommand.type: http`.
+
+### Streamable HTTP (Local, no Docker)
+Run the ASGI server directly.
+
+If installed from PyPI:
+```bash
+python -m x_twitter_mcp.http_server
+```
+
+If installed from source with `uv`:
+```bash
+uv run python -m x_twitter_mcp.http_server
+```
+
+Endpoints and config passing are the same as above.
+
+### Legacy STDIO (CLI Script)
+The project also exposes a STDIO CLI script `x-twitter-mcp-server` for desktop clients that expect STDIO.
 
 If installed from PyPI:
 ```bash
@@ -95,18 +144,6 @@ x-twitter-mcp-server
 If installed from source with `uv`:
 ```bash
 uv run x-twitter-mcp-server
-```
-
-### Option 2: Using FastMCP Directly (Source Only)
-If you installed from source and prefer to run the server using FastMCP’s development mode:
-
-```bash
-fastmcp dev src/x_twitter_mcp/server.py
-```
-
-The server will start and listen for MCP connections. You should see output like:
-```
-Starting TwitterMCPServer...
 ```
 
 ## Using with Claude Desktop

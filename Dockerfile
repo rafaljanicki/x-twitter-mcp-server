@@ -9,7 +9,9 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies using pip
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir . && \
+    pip install --no-cache-dir uvicorn starlette
 
 # Command to run the MCP server (will be overridden by smithery.yaml, but good for local testing)
-CMD ["python", "src/x_twitter_mcp/server.py"]
+ENV PORT=8081
+CMD ["python", "-m", "x_twitter_mcp.http_server"]

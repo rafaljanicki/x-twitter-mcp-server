@@ -16,7 +16,9 @@ authors = [
 dependencies = [
     "fastmcp>=2.2.0",
     "tweepy>=4.15.0",
-    "python-dotenv>=0.21.0"
+    "python-dotenv>=0.21.0",
+    "uvicorn>=0.30.0",
+    "starlette>=0.37.2"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
