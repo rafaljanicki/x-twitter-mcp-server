@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import os
 import warnings
@@ -137,7 +136,7 @@ async def get_user_followers(user_id: str, count: Optional[int] = 100, cursor: O
         raise Exception("Follow action rate limit exceeded")
     client, _ = initialize_twitter_clients()
     followers = client.get_users_followers(id=user_id, max_results=count, pagination_token=cursor, user_fields=["id", "name", "username"])
-    return [user.data for user in followers.data]
+    return [user.data for user in (followers.data or [])]
 
 @server.tool(name="get_user_following", description="Retrieves users the given user is following")
 async def get_user_following(user_id: str, count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
@@ -152,7 +151,7 @@ async def get_user_following(user_id: str, count: Optional[int] = 100, cursor: O
         raise Exception("Follow action rate limit exceeded")
     client, _ = initialize_twitter_clients()
     following = client.get_users_following(id=user_id, max_results=count, pagination_token=cursor, user_fields=["id", "name", "username"])
-    return [user.data for user in following.data]
+    return [user.data for user in (following.data or [])]
 
 @server.tool(name="get_user_followers_you_know", description="Retrieves a list of common followers (simulated)")
 async def get_user_followers_you_know(user_id: str, count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
@@ -168,7 +167,7 @@ async def get_user_followers_you_know(user_id: str, count: Optional[int] = 100, 
     client, _ = initialize_twitter_clients()
     # Simulate by fetching followers and filtering (v2 doesn't directly support mutual followers)
     followers = client.get_users_followers(id=user_id, max_results=count, pagination_token=cursor, user_fields=["id", "name", "username"])
-    return [user.data for user in followers.data][:count]
+    return [user.data for user in (followers.data or [])][:count]
 
 @server.tool(name="get_user_subscriptions", description="Retrieves a list of users to which the specified user is subscribed (uses following as proxy)")
 async def get_user_subscriptions(user_id: str, count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
@@ -184,7 +183,7 @@ async def get_user_subscriptions(user_id: str, count: Optional[int] = 100, curso
     client, _ = initialize_twitter_clients()
     # Use following as proxy for subscriptions
     subscriptions = client.get_users_following(id=user_id, max_results=count, pagination_token=cursor, user_fields=["id", "name", "username"])
-    return [user.data for user in subscriptions.data]
+    return [user.data for user in (subscriptions.data or [])]
 
 # Tweet Management Tools
 @server.tool(name="post_tweet", description="Post a tweet with optional media, reply, and tags")
@@ -349,7 +348,7 @@ async def get_timeline(count: Optional[int] = 100, seen_tweet_ids: Optional[List
     """
     client, _ = initialize_twitter_clients()
     tweets = client.get_home_timeline(max_results=count, pagination_token=cursor, tweet_fields=["id", "text", "created_at"])
-    return [tweet.data for tweet in tweets.data]
+    return [tweet.data for tweet in (tweets.data or [])]
 
 @server.tool(name="get_latest_timeline", description="Get tweets from your home timeline (Following)")
 async def get_latest_timeline(count: Optional[int] = 100) -> List[Dict]:
@@ -360,7 +359,7 @@ async def get_latest_timeline(count: Optional[int] = 100) -> List[Dict]:
     """
     client, _ = initialize_twitter_clients()
     tweets = client.get_home_timeline(max_results=count, tweet_fields=["id", "text", "created_at"], exclude=["replies", "retweets"])
-    return [tweet.data for tweet in tweets.data]
+    return [tweet.data for tweet in (tweets.data or [])]
 
 @server.tool(name="search_twitter", description="Search Twitter with a query")
 async def search_twitter(query: str, product: Optional[str] = "Top", count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
@@ -388,7 +387,7 @@ async def search_twitter(query: str, product: Optional[str] = "Top", count: Opti
         
     client, _ = initialize_twitter_clients()
     tweets = client.search_recent_tweets(query=query, max_results=effective_count, sort_order=sort_order, next_token=cursor, tweet_fields=["id", "text", "created_at"])
-    return [tweet.data for tweet in tweets.data]
+    return [tweet.data for tweet in (tweets.data or [])]
 
 @server.tool(name="get_trends", description="Retrieves trending topics on Twitter")
 async def get_trends(category: Optional[str] = None, count: Optional[int] = 50) -> List[Dict]:
@@ -418,7 +417,7 @@ async def get_highlights_tweets(user_id: str, count: Optional[int] = 100, cursor
     client, _ = initialize_twitter_clients()
     # Twitter API v2 doesn't have highlights; use user timeline
     tweets = client.get_users_tweets(id=user_id, max_results=count, pagination_token=cursor, tweet_fields=["id", "text", "created_at"])
-    return [tweet.data for tweet in tweets.data]
+    return [tweet.data for tweet in (tweets.data or [])]
 
 @server.tool(name="get_user_mentions", description="Get tweets mentioning a specific user")
 async def get_user_mentions(user_id: str, count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
@@ -431,7 +430,7 @@ async def get_user_mentions(user_id: str, count: Optional[int] = 100, cursor: Op
     """
     client, _ = initialize_twitter_clients()
     mentions = client.get_users_mentions(id=user_id, max_results=count, pagination_token=cursor, tweet_fields=["id", "text", "created_at"])
-    return [tweet.data for tweet in mentions.data]
+    return [tweet.data for tweet in (mentions.data or [])]
 
 # Main server execution
 def run():
