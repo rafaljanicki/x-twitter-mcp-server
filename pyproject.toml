@@ -5,7 +5,7 @@ packages = ["src/x_twitter_mcp"]
 
 [project]
 name = "x-twitter-mcp"
-version = "0.1.13"
+version = "0.1.14"
 description = "Twitter search tool for FastMCP using Tweepy"
 readme = "README.md"
 requires-python = ">=3.10"
