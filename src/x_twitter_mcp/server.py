@@ -215,7 +215,7 @@ async def post_tweet(text: str, media_paths: Optional[List[str]] = None, reply_t
     logger.info(f"Type of response from client.create_tweet: {type(tweet)}; Content: {tweet}")
     if not tweet.data:
         return None
-    return tweet.data if isinstance(tweet.data, dict) else tweet.data.data
+    return tweet.data
 
 @server.tool(name="delete_tweet", description="Delete a tweet by its ID")
 async def delete_tweet(tweet_id: str) -> Dict:
@@ -261,7 +261,7 @@ async def create_poll_tweet(text: str, choices: List[str], duration_minutes: int
     tweet = client.create_tweet(**poll_data)
     if not tweet.data:
         return None
-    return tweet.data if isinstance(tweet.data, dict) else tweet.data.data
+    return tweet.data
 
 @server.tool(name="vote_on_poll", description="Vote on a poll (mocked)")
 async def vote_on_poll(tweet_id: str, choice: str) -> Dict:
