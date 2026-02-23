@@ -146,6 +146,43 @@ If installed from source with `uv`:
 uv run x-twitter-mcp-server
 ```
 
+## Systemd Installation (uv)
+
+This repo includes a one-click systemd installer that deploys the service using `uv`, stores secrets in `/etc/x-twitter-mcp/x-twitter-mcp.env`, and runs the HTTP server on port 8081 by default.
+
+### Install
+
+Run from the repo root:
+```bash
+sudo systemd/install-systemd.sh
+```
+
+### Update
+
+Re-run the same installer to sync code and dependencies:
+```bash
+sudo systemd/install-systemd.sh
+```
+
+### Configure Secrets
+
+The installer creates `/etc/x-twitter-mcp/x-twitter-mcp.env` if it doesn't exist.
+- If `.env` exists in the repo, it is copied first.
+- Otherwise, `.env.example` is used.
+- Existing `/etc/x-twitter-mcp/x-twitter-mcp.env` is never overwritten.
+
+To update credentials, edit `/etc/x-twitter-mcp/x-twitter-mcp.env` and restart:
+```bash
+sudo systemctl restart x-twitter-mcp
+```
+
+### Layout
+
+- `/opt/x-twitter-mcp/app` - application code
+- `/opt/x-twitter-mcp/venv` - Python virtual environment (uv-managed)
+- `/etc/x-twitter-mcp/x-twitter-mcp.env` - runtime configuration
+- `/var/lib/x-twitter-mcp` - reserved state directory
+
 ## Using with Claude Desktop
 
 To use this MCP server with Claude Desktop, you need to configure Claude to connect to the server. Follow these steps:

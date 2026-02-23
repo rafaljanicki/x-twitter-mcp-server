@@ -1,0 +1,21 @@
+[Unit]
+Description=X (Twitter) MCP Server
+After=network.target
+
+[Service]
+Type=simple
+User=x-twitter-mcp
+Group=x-twitter-mcp
+WorkingDirectory=/opt/x-twitter-mcp/app
+EnvironmentFile=/etc/x-twitter-mcp/x-twitter-mcp.env
+ExecStart=/opt/x-twitter-mcp/venv/bin/python -m x_twitter_mcp.http_server
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+UMask=027
+
+[Install]
+WantedBy=multi-user.target
