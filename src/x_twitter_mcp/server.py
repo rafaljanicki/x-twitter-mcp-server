@@ -337,21 +337,32 @@ async def delete_all_bookmarks() -> Dict:
     client, _ = initialize_twitter_clients()
     # Twitter API v2 doesn't have a direct endpoint; simulate by fetching and removing
     bookmarks = client.get_bookmarks()
-    for bookmark in bookmarks.data:
-        client.remove_bookmark(tweet_id=bookmark["id"])
+    for bookmark in (bookmarks.data or []):
+        client.remove_bookmark(tweet_id=bookmark.id)
     return {"status": "all bookmarks deleted"}
 
-@server.tool(name="get_bookmarks", description="Retrieves the authenticated user's bookmarked tweets")
+@server.tool(name="get_bookmarks", description="Retrieves the authenticated user's bookmarked tweets. Requires Basic access tier or higher.")
 async def get_bookmarks(count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
     """Fetches the authenticated user's bookmarked tweets.
 
     Args:
-        count (Optional[int]): Number of bookmarks to retrieve. Default 100. Max 100.
+        count (Optional[int]): Number of bookmarks to retrieve. Default 100. Min 1, Max 100.
         cursor (Optional[str]): Pagination token for fetching the next set of results.
+            Maps to Tweepy's pagination_token parameter.
     """
+    if not check_rate_limit("tweet_actions"):
+        raise Exception("Tweet action rate limit exceeded")
     client, _ = initialize_twitter_clients()
+    if count is None:
+        effective_count = 100
+    elif count < 1:
+        effective_count = 1
+    elif count > 100:
+        effective_count = 100
+    else:
+        effective_count = count
     bookmarks = client.get_bookmarks(
-        max_results=count,
+        max_results=effective_count,
         pagination_token=cursor,
         tweet_fields=["id", "text", "created_at", "author_id"]
     )
