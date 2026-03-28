@@ -336,7 +336,7 @@ async def delete_all_bookmarks() -> Dict:
         raise Exception("Tweet action rate limit exceeded")
     client, _ = initialize_twitter_clients()
     # Twitter API v2 doesn't have a direct endpoint; simulate by fetching and removing
-    bookmarks = client.get_bookmarks()
+    bookmarks = client.get_bookmarks(user_auth=True)
     for bookmark in (bookmarks.data or []):
         client.remove_bookmark(tweet_id=bookmark.id)
     return {"status": "all bookmarks deleted"}
@@ -364,7 +364,8 @@ async def get_bookmarks(count: Optional[int] = 100, cursor: Optional[str] = None
     bookmarks = client.get_bookmarks(
         max_results=effective_count,
         pagination_token=cursor,
-        tweet_fields=["id", "text", "created_at", "author_id"]
+        tweet_fields=["id", "text", "created_at", "author_id"],
+        user_auth=True
     )
     return [tweet.data for tweet in (bookmarks.data or [])]
 
