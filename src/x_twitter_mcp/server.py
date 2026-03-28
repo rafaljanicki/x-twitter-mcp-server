@@ -341,6 +341,22 @@ async def delete_all_bookmarks() -> Dict:
         client.remove_bookmark(tweet_id=bookmark["id"])
     return {"status": "all bookmarks deleted"}
 
+@server.tool(name="get_bookmarks", description="Retrieves the authenticated user's bookmarked tweets")
+async def get_bookmarks(count: Optional[int] = 100, cursor: Optional[str] = None) -> List[Dict]:
+    """Fetches the authenticated user's bookmarked tweets.
+
+    Args:
+        count (Optional[int]): Number of bookmarks to retrieve. Default 100. Max 100.
+        cursor (Optional[str]): Pagination token for fetching the next set of results.
+    """
+    client, _ = initialize_twitter_clients()
+    bookmarks = client.get_bookmarks(
+        max_results=count,
+        pagination_token=cursor,
+        tweet_fields=["id", "text", "created_at", "author_id"]
+    )
+    return [tweet.data for tweet in (bookmarks.data or [])]
+
 # Timeline & Search Tools
 @server.tool(name="get_timeline", description="Get tweets from your home timeline (For You)")
 async def get_timeline(count: Optional[int] = 100, seen_tweet_ids: Optional[List[str]] = None, cursor: Optional[str] = None) -> List[Dict]:
