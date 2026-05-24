@@ -31,7 +31,7 @@ A Model Context Protocol (MCP) server for interacting with Twitter (X) via AI to
 
 ### Option 1: Installing via Smithery (Recommended)
 
-To install X (Twitter) MCP server for Claude Desktop automatically via [Smithery](https://smithery.ai/server//x-twitter-mcp-server):
+To install X (Twitter) MCP server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@rafaljanicki/x-twitter-mcp-server):
 
 ```bash
 npx -y @smithery/cli install @rafaljanicki/x-twitter-mcp-server --client claude
@@ -285,6 +285,12 @@ You can now interact with Twitter using natural language in Claude Desktop. Here
   Claude will use the `get_trends` tool to fetch trending topics.
 
 When prompted, grant Claude permission to use the MCP tools for the chat session.
+
+## OpenClaw Companion Workflow
+
+This MCP server is best when an MCP client should call Twitter API v2 tools directly. If the workflow runs in OpenClaw and needs plugin install metadata, endpoint discovery, monitor alerts, webhooks, giveaway draws, media upload or download workflows, direct messages, follower export, or approval-gated post and reply actions, use TweetClaw as a separate OpenClaw plugin and pass reviewed tweet IDs or URLs between the tools.
+
+See [OpenClaw Companion Workflow](examples/openclaw-tweetclaw-companion.md) for a command flow that keeps credentials separate and avoids duplicate write actions.
 
 ## Available Tools
 
