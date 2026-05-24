@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
+from .xquik_search import search_with_xquik, xquik_search_enabled
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -487,6 +488,9 @@ async def search_twitter(query: str, product: Optional[str] = "Top", count: Opti
         count (Optional[int]): Number of tweets to retrieve. Default 100. Min 10, Max 100 for search_recent_tweets.
         cursor (Optional[str]): Pagination token (next_token) for fetching the next set of results.
     """
+    if xquik_search_enabled():
+        return search_with_xquik(query=query, product=product, count=count, cursor=cursor)
+
     sort_order = "relevancy" if product == "Top" else "recency"
     
     # Ensure count is within the allowed range (10-100)

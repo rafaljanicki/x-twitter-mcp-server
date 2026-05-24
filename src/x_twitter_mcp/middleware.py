@@ -41,6 +41,13 @@ class SmitheryConfigMiddleware:
                 "twitterAccessToken": "TWITTER_ACCESS_TOKEN",
                 "twitterAccessTokenSecret": "TWITTER_ACCESS_TOKEN_SECRET",
                 "twitterBearerToken": "TWITTER_BEARER_TOKEN",
+                "twitterOauth2UserAccessToken": "TWITTER_OAUTH2_USER_ACCESS_TOKEN",
+                "searchBackend": "SEARCH_BACKEND",
+                "xquikApiKey": "XQUIK_API_KEY",
+                "hermesTweetApiKey": "HERMES_TWEET_API_KEY",
+                "xquikBaseUrl": "XQUIK_BASE_URL",
+                "hermesTweetBaseUrl": "HERMES_TWEET_BASE_URL",
+                "xquikAuthScheme": "XQUIK_AUTH_SCHEME",
             }
 
             for key, env_key in env_map.items():
@@ -49,5 +56,4 @@ class SmitheryConfigMiddleware:
                     os.environ[env_key] = str(value)
 
         await self.app(scope, receive, send)
-
 
