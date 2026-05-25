@@ -84,14 +84,13 @@ If you prefer to install from the source repository:
       TWITTER_OAUTH2_USER_ACCESS_TOKEN=your_oauth2_user_token
       ```
       See [Obtaining an OAuth 2.0 User Token](#obtaining-an-oauth-20-user-token) below.
-    - Optional: to route only `search_twitter` through a Hermes Tweet/Xquik read backend while keeping all other tools on Twitter API credentials:
+    - Optional: to route only `search_twitter` through an Xquik read backend while keeping all other tools on Twitter API credentials:
       ```
       SEARCH_BACKEND=xquik
       XQUIK_API_KEY=your_xquik_api_key
       XQUIK_BASE_URL=https://xquik.com
       XQUIK_AUTH_SCHEME=api-key
       ```
-      `SEARCH_BACKEND=hermes-tweet` and `HERMES_TWEET_API_KEY` are accepted aliases.
 
 ## Obtaining an OAuth 2.0 User Token
 
@@ -147,7 +146,7 @@ Run the server as an HTTP service with Streamable HTTP and SSE endpoints.
    ```json
    {"twitterApiKey":"...","twitterApiSecret":"...","twitterAccessToken":"...","twitterAccessTokenSecret":"...","twitterBearerToken":"..."}
    ```
-   To use the optional Hermes Tweet/Xquik search backend for `search_twitter`, include:
+   To use the optional Xquik search backend for `search_twitter`, include:
    ```json
    {"searchBackend":"xquik","xquikApiKey":"...","xquikBaseUrl":"https://xquik.com","xquikAuthScheme":"api-key"}
    ```
@@ -481,7 +480,7 @@ Below is a list of all tools provided by the `x-twitter-mcp` server, along with 
   Search Twitter for recent tweets about AI, limit to 10.
   ```
   Claude will return up to 10 recent tweets about AI.
-- **Optional Hermes Tweet/Xquik backend**: Set `SEARCH_BACKEND=xquik` or `SEARCH_BACKEND=hermes-tweet` to route this read-only search tool through Hermes Tweet/Xquik. The rest of the MCP tools continue using Twitter API credentials.
+- **Optional Xquik backend**: Set `SEARCH_BACKEND=xquik` to route this read-only search tool through Xquik. The rest of the MCP tools continue using Twitter API credentials.
 
 #### `get_trends`
 - **Description**: Retrieves trending topics on Twitter.
@@ -528,9 +527,9 @@ Below is a list of all tools provided by the `x-twitter-mcp` server, along with 
     - `get_bookmarks` and `delete_all_bookmarks` require `TWITTER_OAUTH2_USER_ACCESS_TOKEN`. App-only bearer tokens and OAuth 1.0a are rejected by the bookmarks endpoint.
     - See [Obtaining an OAuth 2.0 User Token](#obtaining-an-oauth-20-user-token) for setup instructions.
 
-- **Hermes Tweet/Xquik search returns authentication errors**:
-    - Set `SEARCH_BACKEND=xquik` or `SEARCH_BACKEND=hermes-tweet`.
-    - Provide `XQUIK_API_KEY` or `HERMES_TWEET_API_KEY`.
+- **Xquik search returns authentication errors**:
+    - Set `SEARCH_BACKEND=xquik`.
+    - Provide `XQUIK_API_KEY`.
     - Use `XQUIK_AUTH_SCHEME=api-key` unless your endpoint expects bearer auth.
 
 - **Syntax Warnings**:

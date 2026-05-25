@@ -14,9 +14,7 @@ class SmitheryConfigMiddlewareTests(unittest.TestCase):
         for key in (
             "SEARCH_BACKEND",
             "XQUIK_API_KEY",
-            "HERMES_TWEET_API_KEY",
             "XQUIK_BASE_URL",
-            "HERMES_TWEET_BASE_URL",
             "XQUIK_AUTH_SCHEME",
         ):
             os.environ.pop(key, None)

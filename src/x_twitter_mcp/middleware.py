@@ -16,9 +16,7 @@ _ENV_MAP = {
     "twitterOauth2UserAccessToken": "TWITTER_OAUTH2_USER_ACCESS_TOKEN",
     "searchBackend": "SEARCH_BACKEND",
     "xquikApiKey": "XQUIK_API_KEY",
-    "hermesTweetApiKey": "HERMES_TWEET_API_KEY",
     "xquikBaseUrl": "XQUIK_BASE_URL",
-    "hermesTweetBaseUrl": "HERMES_TWEET_BASE_URL",
     "xquikAuthScheme": "XQUIK_AUTH_SCHEME",
 }
 

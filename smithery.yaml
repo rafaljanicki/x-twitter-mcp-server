@@ -1,4 +1,4 @@
-# Smithery configuration file: https://smithery.ai/docs/build/project-config/smithery-yaml
+# Smithery configuration file: https://smithery.ai/docs/build
 runtime: "container"
 build:
   dockerfile: "Dockerfile"
@@ -33,19 +33,13 @@ startCommand:
         description: "OAuth 2.0 user access token (PKCE flow). Required for bookmark operations (get_bookmarks, delete_all_bookmarks). Obtain via tweepy.OAuth2UserHandler with bookmark.read, bookmark.write, and users.read scopes."
       searchBackend:
         type: string
-        description: "Optional read backend for search_twitter. Use xquik or hermes-tweet to route search through Hermes Tweet/Xquik while leaving other tools on Twitter API credentials."
+        description: "Optional read backend for search_twitter. Use xquik to route search through Xquik while leaving other tools on Twitter API credentials."
       xquikApiKey:
         type: string
-        description: Optional Xquik API key for the Hermes Tweet/Xquik search backend.
-      hermesTweetApiKey:
-        type: string
-        description: Optional Hermes Tweet API key alias for the Xquik search backend.
+        description: Optional Xquik API key for the Xquik search backend.
       xquikBaseUrl:
         type: string
         description: Optional Xquik-compatible base URL. Defaults to https://xquik.com.
-      hermesTweetBaseUrl:
-        type: string
-        description: Optional Hermes Tweet-compatible base URL alias.
       xquikAuthScheme:
         type: string
         description: Optional auth scheme for the Xquik search backend. Use api-key or bearer.

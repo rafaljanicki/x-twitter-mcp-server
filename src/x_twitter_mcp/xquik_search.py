@@ -6,7 +6,7 @@ import requests
 
 
 _DEFAULT_BASE_URL = "https://xquik.com"
-_XQUIK_BACKENDS = {"xquik", "hermes-tweet", "hermes_tweet"}
+_XQUIK_BACKENDS = {"xquik"}
 
 
 def _non_empty(value: Optional[str]) -> Optional[str]:
@@ -22,15 +22,11 @@ def xquik_search_enabled() -> bool:
 
 
 def _api_key() -> Optional[str]:
-    return _non_empty(os.getenv("XQUIK_API_KEY")) or _non_empty(
-        os.getenv("HERMES_TWEET_API_KEY")
-    )
+    return _non_empty(os.getenv("XQUIK_API_KEY"))
 
 
 def _base_url() -> str:
-    configured = _non_empty(os.getenv("XQUIK_BASE_URL")) or _non_empty(
-        os.getenv("HERMES_TWEET_BASE_URL")
-    )
+    configured = _non_empty(os.getenv("XQUIK_BASE_URL"))
     return configured or _DEFAULT_BASE_URL
 
 
