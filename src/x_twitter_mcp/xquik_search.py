@@ -4,6 +4,8 @@ from urllib.parse import urljoin
 
 import requests
 
+from .middleware import get_smithery_config_value
+
 
 _DEFAULT_BASE_URL = "https://xquik.com"
 _XQUIK_BACKENDS = {"xquik"}
@@ -17,21 +19,33 @@ def _non_empty(value: Optional[str]) -> Optional[str]:
 
 
 def xquik_search_enabled() -> bool:
-    backend = _non_empty(os.getenv("SEARCH_BACKEND"))
+    backend = get_smithery_config_value("searchBackend") or _non_empty(
+        os.getenv("SEARCH_BACKEND")
+    )
     return backend is not None and backend.lower() in _XQUIK_BACKENDS
 
 
 def _api_key() -> Optional[str]:
-    return _non_empty(os.getenv("HERMES_TWEET_API_KEY")) or _non_empty(os.getenv("XQUIK_API_KEY"))
+    return (
+        get_smithery_config_value("hermesTweetApiKey")
+        or get_smithery_config_value("xquikApiKey")
+        or _non_empty(os.getenv("HERMES_TWEET_API_KEY"))
+        or _non_empty(os.getenv("XQUIK_API_KEY"))
+    )
 
 
 def _base_url() -> str:
-    configured = _non_empty(os.getenv("XQUIK_BASE_URL"))
+    configured = get_smithery_config_value("xquikBaseUrl") or _non_empty(
+        os.getenv("XQUIK_BASE_URL")
+    )
     return configured or _DEFAULT_BASE_URL
 
 
 def _auth_scheme() -> str:
-    return (_non_empty(os.getenv("XQUIK_AUTH_SCHEME")) or "api-key").lower()
+    configured = get_smithery_config_value("xquikAuthScheme") or _non_empty(
+        os.getenv("XQUIK_AUTH_SCHEME")
+    )
+    return (configured or "api-key").lower()
 
 
 def _search_url() -> str:

@@ -1,4 +1,5 @@
 import base64
+import contextvars
 import json
 import os
 from typing import Any
@@ -7,6 +8,11 @@ from urllib.parse import parse_qs, unquote
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 
+_SMITHERY_CONFIG: contextvars.ContextVar[dict[str, Any] | None] = contextvars.ContextVar(
+    "smithery_config",
+    default=None,
+)
+
 _ENV_MAP = {
     "twitterApiKey": "TWITTER_API_KEY",
     "twitterApiSecret": "TWITTER_API_SECRET",
@@ -14,12 +20,22 @@ _ENV_MAP = {
     "twitterAccessTokenSecret": "TWITTER_ACCESS_TOKEN_SECRET",
     "twitterBearerToken": "TWITTER_BEARER_TOKEN",
     "twitterOauth2UserAccessToken": "TWITTER_OAUTH2_USER_ACCESS_TOKEN",
-    "searchBackend": "SEARCH_BACKEND",
-    "hermesTweetApiKey": "HERMES_TWEET_API_KEY",
-    "xquikApiKey": "XQUIK_API_KEY",
-    "xquikBaseUrl": "XQUIK_BASE_URL",
-    "xquikAuthScheme": "XQUIK_AUTH_SCHEME",
 }
+
+
+def get_smithery_config_value(*keys: str) -> str | None:
+    config = _SMITHERY_CONFIG.get()
+    if not config:
+        return None
+
+    for key in keys:
+        value = config.get(key)
+        if value is None:
+            continue
+        text = str(value).strip()
+        if text:
+            return text
+    return None
 
 
 def _apply_config_env(config: dict[str, Any]) -> dict[str, str | None]:
@@ -51,6 +67,7 @@ class SmitheryConfigMiddleware:
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         previous_env: dict[str, str | None] | None = None
+        config_token: contextvars.Token | None = None
         if scope.get("type") == "http":
             query = scope.get("query_string", b"").decode()
             config: dict[str, Any] = {}
@@ -60,17 +77,22 @@ class SmitheryConfigMiddleware:
                     parsed = parse_qs(query)
                     enc = parsed.get("config", [""])[0]
                     raw = base64.b64decode(unquote(enc))
-                    config = json.loads(raw)
+                    decoded = json.loads(raw)
+                    if isinstance(decoded, dict):
+                        config = decoded
                 except Exception:
                     config = {}
 
             scope["smithery_config"] = config
 
             # Map config to env vars expected by server.initialize_twitter_clients
+            config_token = _SMITHERY_CONFIG.set(config)
             previous_env = _apply_config_env(config)
 
         try:
             await self.app(scope, receive, send)
         finally:
+            if config_token is not None:
+                _SMITHERY_CONFIG.reset(config_token)
             if previous_env is not None:
                 _restore_env(previous_env)
