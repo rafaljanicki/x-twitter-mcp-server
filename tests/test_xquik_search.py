@@ -14,6 +14,7 @@ class XquikSearchTests(unittest.TestCase):
         self._env = os.environ.copy()
         for key in (
             "SEARCH_BACKEND",
+            "HERMES_TWEET_API_KEY",
             "XQUIK_API_KEY",
             "XQUIK_BASE_URL",
             "XQUIK_AUTH_SCHEME",
@@ -72,6 +73,7 @@ class XquikSearchTests(unittest.TestCase):
         )
 
     def test_bearer_auth_scheme(self) -> None:
+        os.environ["HERMES_TWEET_API_KEY"] = "hermes-key"
         os.environ["XQUIK_API_KEY"] = "xquik-key"
         os.environ["XQUIK_AUTH_SCHEME"] = "bearer"
         response = Mock()
@@ -82,7 +84,7 @@ class XquikSearchTests(unittest.TestCase):
             tweets = search_with_xquik("AI", "Top", 101, None)
 
         self.assertEqual(tweets, [{"id": "1", "text": "one"}])
-        self.assertEqual(get.call_args.kwargs["headers"], {"Authorization": "Bearer xquik-key"})
+        self.assertEqual(get.call_args.kwargs["headers"], {"Authorization": "Bearer hermes-key"})
         self.assertEqual(
             get.call_args.kwargs["params"],
             {"q": "AI", "limit": 100, "queryType": "Top"},

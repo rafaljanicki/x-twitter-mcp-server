@@ -13,6 +13,7 @@ class SmitheryConfigMiddlewareTests(unittest.TestCase):
         self._env = os.environ.copy()
         for key in (
             "SEARCH_BACKEND",
+            "HERMES_TWEET_API_KEY",
             "XQUIK_API_KEY",
             "XQUIK_BASE_URL",
             "XQUIK_AUTH_SCHEME",
@@ -27,13 +28,13 @@ class SmitheryConfigMiddlewareTests(unittest.TestCase):
         async def app(scope: dict[str, Any], receive: Any, send: Any) -> None:
             self.assertEqual(scope["smithery_config"]["searchBackend"], "xquik")
             self.assertEqual(os.environ["SEARCH_BACKEND"], "xquik")
-            self.assertEqual(os.environ["XQUIK_API_KEY"], "request-key")
+            self.assertEqual(os.environ["HERMES_TWEET_API_KEY"], "request-key")
 
         config = base64.b64encode(
             json.dumps(
                 {
                     "searchBackend": "xquik",
-                    "xquikApiKey": "request-key",
+                    "hermesTweetApiKey": "request-key",
                 }
             ).encode()
         )
@@ -43,7 +44,7 @@ class SmitheryConfigMiddlewareTests(unittest.TestCase):
         asyncio.run(middleware(scope, None, None))
 
         self.assertIsNone(os.environ.get("SEARCH_BACKEND"))
-        self.assertIsNone(os.environ.get("XQUIK_API_KEY"))
+        self.assertIsNone(os.environ.get("HERMES_TWEET_API_KEY"))
 
     def test_missing_request_config_does_not_keep_stale_search_backend(self) -> None:
         os.environ["SEARCH_BACKEND"] = "xquik"

@@ -34,9 +34,12 @@ startCommand:
       searchBackend:
         type: string
         description: "Optional read backend for search_twitter. Use xquik to route search through Xquik while leaving other tools on Twitter API credentials."
+      hermesTweetApiKey:
+        type: string
+        description: Optional Hermes Tweet-compatible API key for the Xquik search backend.
       xquikApiKey:
         type: string
-        description: Optional Xquik API key for the Xquik search backend.
+        description: Optional compatibility alias for the Xquik search backend API key.
       xquikBaseUrl:
         type: string
         description: Optional Xquik-compatible base URL. Defaults to https://xquik.com.
@@ -50,4 +53,4 @@ startCommand:
     twitterAccessTokenSecret: JKL012SECRET
     twitterBearerToken: MNO345BEARER
     searchBackend: xquik
-    xquikApiKey: XQ_SAMPLE_KEY
+    hermesTweetApiKey: XQ_SAMPLE_KEY

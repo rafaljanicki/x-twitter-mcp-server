@@ -22,7 +22,7 @@ def xquik_search_enabled() -> bool:
 
 
 def _api_key() -> Optional[str]:
-    return _non_empty(os.getenv("XQUIK_API_KEY"))
+    return _non_empty(os.getenv("HERMES_TWEET_API_KEY")) or _non_empty(os.getenv("XQUIK_API_KEY"))
 
 
 def _base_url() -> str:

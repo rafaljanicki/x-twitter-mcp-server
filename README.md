@@ -87,6 +87,7 @@ If you prefer to install from the source repository:
     - Optional: to route only `search_twitter` through an Xquik read backend while keeping all other tools on Twitter API credentials:
       ```
       SEARCH_BACKEND=xquik
+      HERMES_TWEET_API_KEY=your_hermes_tweet_api_key
       XQUIK_API_KEY=your_xquik_api_key
       XQUIK_BASE_URL=https://xquik.com
       XQUIK_AUTH_SCHEME=api-key
@@ -148,7 +149,7 @@ Run the server as an HTTP service with Streamable HTTP and SSE endpoints.
    ```
    To use the optional Xquik search backend for `search_twitter`, include:
    ```json
-   {"searchBackend":"xquik","xquikApiKey":"...","xquikBaseUrl":"https://xquik.com","xquikAuthScheme":"api-key"}
+   {"searchBackend":"xquik","hermesTweetApiKey":"...","xquikBaseUrl":"https://xquik.com","xquikAuthScheme":"api-key"}
    ```
    Encode and call `initialize`:
    ```bash
@@ -480,7 +481,7 @@ Below is a list of all tools provided by the `x-twitter-mcp` server, along with 
   Search Twitter for recent tweets about AI, limit to 10.
   ```
   Claude will return up to 10 recent tweets about AI.
-- **Optional Xquik backend**: Set `SEARCH_BACKEND=xquik` to route this read-only search tool through Xquik. The rest of the MCP tools continue using Twitter API credentials.
+- **Optional Xquik backend**: Set `SEARCH_BACKEND=xquik` and `HERMES_TWEET_API_KEY` to route this read-only search tool through a Hermes Tweet-compatible Xquik read endpoint. The rest of the MCP tools continue using Twitter API credentials. `XQUIK_API_KEY` remains supported as a compatibility alias.
 
 #### `get_trends`
 - **Description**: Retrieves trending topics on Twitter.
@@ -529,7 +530,7 @@ Below is a list of all tools provided by the `x-twitter-mcp` server, along with 
 
 - **Xquik search returns authentication errors**:
     - Set `SEARCH_BACKEND=xquik`.
-    - Provide `XQUIK_API_KEY`.
+    - Provide `HERMES_TWEET_API_KEY` or `XQUIK_API_KEY`.
     - Use `XQUIK_AUTH_SCHEME=api-key` unless your endpoint expects bearer auth.
 
 - **Syntax Warnings**:
