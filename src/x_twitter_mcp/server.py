@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
+from . import hermes_tweet
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -500,6 +501,9 @@ async def search_twitter(query: str, product: Optional[str] = "Top", count: Opti
         effective_count = 100
     else:
         effective_count = count
+
+    if hermes_tweet.is_configured():
+        return hermes_tweet.search_tweets(query, effective_count, cursor, product)
         
     client, _ = initialize_twitter_clients()
     tweets = client.search_recent_tweets(query=query, max_results=effective_count, sort_order=sort_order, next_token=cursor, tweet_fields=["id", "text", "created_at"])

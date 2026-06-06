@@ -84,6 +84,13 @@ If you prefer to install from the source repository:
       TWITTER_OAUTH2_USER_ACCESS_TOKEN=your_oauth2_user_token
       ```
       See [Obtaining an OAuth 2.0 User Token](#obtaining-an-oauth-20-user-token) below.
+    - Optional: add Hermes Tweet credentials to route `search_twitter` through
+      Hermes Tweet while keeping the other tools on the existing Twitter API
+      clients:
+      ```
+      HERMES_TWEET_API_KEY=your_hermes_tweet_key
+      HERMES_TWEET_BASE_URL=https://api.xquik.com
+      ```
 
 ## Obtaining an OAuth 2.0 User Token
 
@@ -147,6 +154,10 @@ Run the server as an HTTP service with Streamable HTTP and SSE endpoints.
      -H 'content-type: application/json' \
      -d '{"jsonrpc":"2.0","id":"1","method":"initialize","params":{"capabilities":{}}}'
    ```
+
+   To use Hermes Tweet for `search_twitter`, include `hermesTweetApiKey` in
+   the same config object. `hermesTweetBaseUrl` is optional and defaults to
+   `https://api.xquik.com`.
 
 Notes:
 - A `POST /` will return 404; use `/mcp` for Streamable HTTP and `/sse` for SSE.

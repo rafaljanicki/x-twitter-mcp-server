@@ -5,6 +5,8 @@ from urllib.parse import parse_qs, unquote
 
 from starlette.types import ASGIApp, Receive, Scope, Send
 
+from . import hermes_tweet
+
 
 class SmitheryConfigMiddleware:
     """Middleware to inject Smithery per-request config into ASGI scope.
@@ -32,7 +34,7 @@ class SmitheryConfigMiddleware:
 
             scope["smithery_config"] = config
 
-            # Map config to env vars expected by server.initialize_twitter_clients
+            # Map Twitter config to env vars expected by server.initialize_twitter_clients
             import os
 
             env_map = {
@@ -48,6 +50,11 @@ class SmitheryConfigMiddleware:
                 if value:
                     os.environ[env_key] = str(value)
 
+            token = hermes_tweet.set_request_config(config)
+            try:
+                await self.app(scope, receive, send)
+            finally:
+                hermes_tweet.reset_request_config(token)
+            return
+
         await self.app(scope, receive, send)
-
-

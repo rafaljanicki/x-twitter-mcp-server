@@ -31,6 +31,18 @@ startCommand:
       twitterOauth2UserAccessToken:
         type: string
         description: "OAuth 2.0 user access token (PKCE flow). Required for bookmark operations (get_bookmarks, delete_all_bookmarks). Obtain via tweepy.OAuth2UserHandler with bookmark.read, bookmark.write, and users.read scopes."
+      hermesTweetApiKey:
+        type: string
+        description: "Optional Hermes Tweet API key. When set, search_twitter can use Hermes Tweet for tweet search while other tools keep using Twitter API credentials."
+      hermesTweetBaseUrl:
+        type: string
+        description: "Optional Hermes Tweet API base URL. Defaults to https://api.xquik.com."
+      xquikApiKey:
+        type: string
+        description: "Optional alias for hermesTweetApiKey."
+      xquikBaseUrl:
+        type: string
+        description: "Optional alias for hermesTweetBaseUrl."
   exampleConfig:
     twitterApiKey: ABC123KEY
     twitterApiSecret: DEF456SECRET
