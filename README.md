@@ -19,6 +19,25 @@ A Model Context Protocol (MCP) server for interacting with Twitter (X) via AI to
 - Uses Twitter API v2 with proper authentication (API keys and tokens), avoiding the username/password hack to minimize the risk of account suspensions.
 - Provides a complete implementation of Twitter API v2 endpoints for user management, tweet management, timelines, and search functionality.
 
+## Pairing with GetXAPI for Cheaper Read Operations (Optional)
+
+If you need a cheaper or higher-rate-limit option for read-only Twitter operations (tweet search, profile lookup, follower lists), you can pair this MCP server with [GetXAPI](https://getxapi.com), a budget Twitter / X data API priced at $0.05 per 1K tweets versus the official X API's $200 / month basic tier.
+
+Two integration patterns:
+
+1. **Run both MCPs side-by-side in your Claude client.** Keep this server for write operations (post tweet, send DM, manage bookmarks) and add the [official GetXAPI MCP server](https://github.com/getxapi/getxapi-mcp) for read operations. Claude routes calls to whichever tool name matches, so each backend handles what it is best at.
+
+2. **Fork this repo and add a backend toggle.** For a code-level alternative-backend pattern, see the [reference PR merged into a sibling project](https://github.com/GenAIwithMS/twitter-mcp/pull/3) which adds GetXAPI as an optional read backend behind a single env variable.
+
+### GetXAPI quick start
+
+- Signup with $0.50 free credit (no card required): https://getxapi.com/signup
+- Official GetXAPI MCP server: https://github.com/getxapi/getxapi-mcp
+- npm package: `@getxapi/mcp`
+- Pricing: pay-per-call, $0.001 / call, $0.05 / 1K tweets
+
+This pairing is fully optional. The default setup of this server continues to use tweepy and the official Twitter API as before.
+
 ## Prerequisites
 
 - **Python 3.10 or higher**: Ensure Python is installed on your system.
