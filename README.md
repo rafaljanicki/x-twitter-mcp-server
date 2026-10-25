@@ -1,6 +1,6 @@
 # X (Twitter) MCP server
 
-[![smithery badge](https://smithery.ai/badge/@rafaljanicki/x-twitter-mcp-server)](https://smithery.ai/server/@rafaljanicki/x-twitter-mcp-server)
+[![LightNow capabilities](https://lightnow.ai/badge/io.github.rafaljanicki/x-twitter-mcp-server)](https://lightnow.ai/servers/io.github.rafaljanicki/x-twitter-mcp-server)
 [![PyPI version](https://badge.fury.io/py/x-twitter-mcp.svg)](https://badge.fury.io/py/x-twitter-mcp)
 
 A Model Context Protocol (MCP) server for interacting with Twitter (X) via AI tools. This server allows you to fetch tweets, post tweets, search Twitter, manage followers, and more, all through natural language commands in AI Tools.
